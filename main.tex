@@ -1,0 +1,918 @@
+\documentclass{article}
+\input{preamble.tex}
+
+\begin{document}
+
+\title{Notes on Presheaves as Discrete Fibrations}
+
+\author{Ken Lee}
+\date{2021 Summer}
+\maketitle
+\tableofcontents
+
+% rmk. what an (∞,1)-category ``should'' be
+% - infinity groupoid of a topological space
+% - simplicial categories : stack of modules
+
+\section{Presheaves - Objects probeable by a category of test objects}
+
+\begin{rmk}[Presheaves as Probeable Objects]
+  
+  A general philosophy in mathematics is to
+  study objects by ``probing them with test objects''
+  which we understand,
+  where by ``probing'' we mean mapping these ``test objects'' into them.
+  The ``test objects'' usually form a (small) category,
+  which for this discussion let's call $C$.
+  Our main example throughout will be $C = $``the category of triangles''.
+  A ``presheaf over $C$'' is exactly 
+  ``an object that is probeable by test objects in $C$''.
+  The steps to formalising this statement are : 
+  \begin{enumerate}
+    \item If $X$ is an object 
+    ``that can be mapped into by test objects in $C$'',
+    then we ought to have a set $X(c)$ for each $c$ in $C$,
+    which we think of as the set of maps $c \to X$.
+    We will call these \emph{naive morphisms} from $c$ to $X$.
+    \item if we have a morphism $f : d \to c$ in $C$,
+    then \emph{restricting along $f$} should give a way
+    of turning naive morphisms from $c$ to $X$ into
+    naive morphisms from $d$ to $X$.
+    \begin{cd}
+      d & c \\
+      & X
+      \arrow["f", from=1-1, to=1-2]
+      \arrow["x", from=1-2, to=2-2]
+      \arrow["xf"', from=1-1, to=2-2]
+    \end{cd}
+    In other words, for each morphism $f : d \to c$ in $C$,
+    we want the data of a morphism of sets $X(c) \to X(d)$.
+    Furthermore, we should have 
+    \begin{cd}
+      e & d & c & c & {} \\
+      && X
+      \arrow["f", from=1-2, to=1-3]
+      \arrow["x", from=1-3, to=2-3]
+      \arrow["g", from=1-1, to=1-2]
+      \arrow["{xfg = (xf)g}"', from=1-1, to=2-3]
+      \arrow["{\id{c}}"{swap},from=1-4, to=1-3]
+      \arrow["{x = x \id{c}}", from=1-4, to=2-3]
+    \end{cd}
+    This gives exactly the definition of a presheaf over $C$
+    as a functor $C\op \to \SET$.
+    \item The intuition that the morphisms of presheaves \emph{should} be
+    natural transformations of functors comes from the idea :
+    ``if $f : X \to Y$ is a morphism between objects probeable 
+    by test objects in $C$, then
+    \emph{composing along $f$} should give a way of turning 
+    naive morphisms $c \to X$ into naive morphisms $c \to Y$''.
+    Under this point of view, naturality is tautological.
+  \end{enumerate}
+
+  Nice as the above interpretation is,
+  this is \emph{not} the definition of presheaves we will take.
+  The following proposition gives an alternate definition,
+  which can be seen as a generalisation of 
+  \emph{covering spaces} from algebraic topology.
+  Indeed, the classical theory of covering spaces
+  can be seen as establishing conditions on the base topological space
+  for which discrete fibrations over the (dual of the) fundamental groupoid
+  correspond to actual topological spaces over the base space.
+\end{rmk}
+
+\begin{prop}[``A bundle of sets is a bundle of sets'']
+
+  Let $ C$ be a (small) category.
+
+  For $(p : X \to  C)$ in $\CAT /  C$, 
+  we say $p$ is a \emph{discrete fibration} when
+  any of the following equivalent conditions are met :
+  \begin{enumerate}
+    \item any commutative square of categories of the following form
+    has a \emph{unique} diagonal making the diagram commute :
+    \begin{cd}
+      {[0]} & X \\
+      {[1]} & C
+      \arrow["1"', from=1-1, to=2-1]
+      \arrow[from=2-1, to=2-2]
+      \arrow[from=1-2, to=2-2]
+      \arrow[from=1-1, to=1-2]
+      \arrow[dashed, from=2-1, to=1-2]
+    \end{cd}
+    We use $[n]$ to mean the linear order $0 \leq \cdots \leq n$
+    viewed as a category.
+
+    The outter square is called a \emph{lifting problem}
+    and any such diagonal is called a \emph{solution}.
+    \item the following is a $1$-categorical pullback diagram of categories : 
+    \begin{cd}
+      {X^{[1]}} & X \\
+      {C^{[1]}} & C
+      \arrow["\ev_1"', from=2-1, to=2-2]
+      \arrow["{p^{[1]}}"', from=1-1, to=2-1]
+      \arrow["\ev_1", from=1-1, to=1-2]
+      \arrow["p", from=1-2, to=2-2]
+      \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \end{cd}
+  \end{enumerate}
+  Define the \emph{category of discrete fibrations over $ C$} to be
+  the full subcategory $\mathrm{Disc}/ C$ of $\CAT /  C$ consisting of
+  discrete fibrations.
+  With abuse of notation,
+  we sometimes simply write $X$ to instead of $p : X \to C$.
+
+  We then have the following : 
+  \begin{enumerate}
+    \item Let $\bullet/\SET$ be the category of (small) sets 
+    under the singleton $\bullet$, 
+    equivalently the category of pointed (small) sets.
+    Then the forgetful functor $(\bullet/\SET)\op \to \SET\op$
+    is a discrete fibration.
+    \item The (1-categorical) pullback of 
+    a discrete fibration is a discrete fibration.
+    In particular, for any functor $F : C \to \SET\op$,
+    we have 
+    \begin{cd}
+      {\Sigma F} & {(\bullet / \mathbf{Set})^{op}} \\
+      C & {\mathbf{Set}^{op}}
+      \arrow[from=1-2, to=2-2]
+      \arrow["F"', from=2-1, to=2-2]
+      \arrow[from=1-1, to=2-1]
+      \arrow[from=1-1, to=1-2]
+      \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \end{cd}
+    where $\Sigma F \to C$ is a discrete fibration.
+    The morphism  $\Sigma F \to C$ 
+    can be explicitly defined :
+    \begin{itemize}
+      \item the objects of the category $\Sigma F$ are
+      ``naive morphisms $c \to F$''
+      and the morphisms between two naive morphisms $c \to F$ and $d \to F$
+      are morphisms $f \in C(c,d)$ such that 
+      ``the following triangle commutes'' :
+      \begin{cd}
+        c & d \\
+        & F
+        \arrow["f", from=1-1, to=1-2]
+        \arrow[from=1-2, to=2-2]
+        \arrow[from=1-1, to=2-2]
+      \end{cd}
+      \item the projection $\Sigma F \to C$ is given by taking
+      the source of naive morphisms into $F$.
+    \end{itemize}
+    The above construction defines 
+    a functor $\Sigma : (\SET\op)^C \to \mathrm{Disc}/C$.
+    We will call $\Sigma F$ the \emph{total space of $F$}. 
+    \item 
+    We have a functor $\mathrm{Fib} : \mathrm{Disc}/ C \to (\SET\op)^C$
+    defined by 
+    \begin{itemize}
+      \item On objects, take $(p : X \to  C)$ to the functor $C \to \SET\op$
+      defined by
+      \begin{itemize}
+        \item on objects, $c$ is sent to $p\inv (c)$,
+        which is a discrete category, i.e. a set.
+        \item morphisms are defined by arrow-lifting definition of
+        discrete fibrations.
+        The uniqueness of the arrow-lifting gives functoriality.
+      \end{itemize}
+      \item For a morphism of discrete fibrations over $C$
+      \begin{cd}
+        X & Y \\
+        & C
+        \arrow["p"', from=1-1, to=2-2]
+        \arrow["q", from=1-2, to=2-2]
+        \arrow["f", from=1-1, to=1-2]
+      \end{cd}
+      fibers are mapped into fibers, thus giving
+      a map of sets $f_c : \mathrm{Fib}(p)\, c \to \mathrm{Fib}(q)\, c$.
+      Uniqueness of arrow-lifts for $(q : Y \to C)$
+      implies $(f_c)_{c \in C}$ defines a natural transformation
+      $\mathrm{Fib}(p) \to \mathrm{Fib}(q)$.
+    \end{itemize}
+    For $(p : X \to  C)$ in $\mathrm{Disc}/ C$,
+    we call $\mathrm{Fib}(p)$ the \emph{fiber functor of $p$}.
+    If the morphism $p$ is clear from the context,
+    we will sometimes write $\mathrm{Fib} X$ instead.
+    \item The functors $\mathrm{Fib}, \Sigma$ define
+    an equivalence of categories
+    \[
+      \mathrm{Disc}/C \simeq (\SET\op)^C \iso \SET^{C\op}  
+    \]
+    In other words, we say that $(\bullet/\SET)\op \to \SET\op$ is the
+    \emph{universal discrete fibration} and that 
+    $\SET\op$ \emph{classifies} discrete fibrations.
+  \end{enumerate}
+  % We also have a functor $\int_C : \SET^{ C\op} \to \mathrm{Disc}/ C$ 
+  % defined by : 
+  
+  % We will call $\int_C F$ the \emph{total space of $F$}.
+  % It is also known as the \emph{Grothendieck construction}.
+
+  % Then $\int_C$ and $\mathrm{Fib}$ give an equivalence of categories. 
+
+\end{prop}
+\begin{proof}
+  \textit{(Equivalent definitions of discrete fibration)}
+  \textit{$(2\implies 1)$} by taking objects.
+  \textit{$(1\implies 2)$} 
+  The assumption says that we have the pullback on the level of objects.
+  To show the pullback for the level of arrows,
+  note that this is equivalent to showing
+  the lifting problems of the following form have \emph{unique} solutions :
+  \begin{cd}
+    {[1] \times\set{1}} & X \\
+    {[1]\times [1]} & C
+    \arrow[from=1-1, to=2-1]
+    \arrow[from=1-2, to=2-2]
+    \arrow[from=2-1, to=2-2]
+    \arrow[from=1-1, to=1-2]
+    \arrow[dashed, from=2-1, to=1-2]
+  \end{cd}
+  This can be thought of as a categorical version of
+  the fact that in one can ``lift squares by an edge along a covering space''.
+  Existence of the lift uses uniqueness of the arrow-lifts,
+  and so does uniqueness.
+
+  \textit{(1)} ok.
+
+  \textit{(2)(Pullback of Discrete Fibrations)} 
+  Via the unique arrow-lifting definition of discrete fibrations,
+  the proof is direct. 
+  Via the pullback definition of discrete fibrations,
+  one can apply the pasting lemma for pullback squares.
+
+  \textit{(2)($\Sigma$ defines a functor)}
+  Let $h : F \to G$ be a natural transformation of functors
+  $C \to \SET\op$.
+  Then we the following commuting diagram of categories :
+  \begin{cd}
+    {\Sigma F + \Sigma G} & {\Sigma h} & {(\bullet/\mathbf{Set})^{op}} \\
+    {C + C} & {C\times [1]} & {\mathbf{Set}^{op}}
+    \arrow[from=1-3, to=2-3]
+    \arrow["h"', from=2-2, to=2-3]
+    \arrow[from=2-1, to=2-2]
+    \arrow[from=1-2, to=2-2]
+    \arrow[from=1-2, to=1-3]
+    \arrow[from=1-1, to=2-1]
+    \arrow[from=1-1, to=1-2]
+    \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-2, to=2-3]
+    \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+  \end{cd}
+  where $C + C$ denotes the coproduct of $C$ with itself and
+  we have the left square is cartesian since
+  the right and outter squares are cartesian (easy to check).
+  One can check that the morphism $\Sigma F + \Sigma G \to \Sigma h$
+  exhibits $\Sigma F, \Sigma G$ as full subcategories of $\Sigma h$.
+  The unique-arrow lifting property of $\Sigma h$
+  then defines as functor $\Sigma F \to \Sigma G$ over $C$.
+
+  An alternate, more explicit construction is to use 
+  the explicit definition of $\Sigma F \to C$.
+
+  \textit{(3)} ok.
+
+  \textit{(4)}
+  Completely formal.
+  The functors $\Sigma$ and $\mathrm{Fib}$ actually give
+  an isomorphism of categories.
+\end{proof}
+
+\begin{dfn}[Presheaves over a Category]
+  
+  Let $ C$ be a (small) category.
+  Then we will also call $\mathrm{Disc}/ C$ the
+  \emph{category of presheaves over $ C$},
+  denote it with $\PSH C$,
+  and call its objects \emph{presheaves (over $ C$)}.
+  For $c$ in $C$ and $X$ in $\PSH C$,
+  we will also write $X(c)$ for the fiber of $X$ over $c$.
+\end{dfn}
+
+\begin{rmk}
+  The standard definition of the category of presheaves on a category $C$
+  is the category of functors $C\op \to \SET$.
+  Our perhaps unconventional choice of definition of presheaves as
+  discrete fibrations has the following advantages : 
+  \begin{itemize}
+    \item the proofs of all nice properties of $\PSH C$,
+    i.e. topos-theoretic properties, are arguably more intuitive
+    when phrased in terms of discrete fibrations.
+    \item building intuition of presheaves as discrete fibrations
+    makes the later generalisation to right fibrations of infinity categories
+    obvious : 
+    right fibrations are exactly discrete fibrations
+    where sets are replaced with ``sets with equality as data''.
+    Specifically, we will much later see that
+    right fibrations over an infinity category $X$
+    correspond to functors $X \to \infty\mathbf{Grpd}\op$
+    to the infinity category of infinity groupoids.
+  \end{itemize}
+\end{rmk}
+
+\begin{eg}
+  
+  Let $I$ be a discrete category, i.e. a set.
+  Then presheaves over $I$ are the same data as
+  a family of sets parameterised by $I$.
+\end{eg}
+
+\begin{eg}
+  Let $C$ be a groupoid and $p : X \to C$ a morphism of categories.
+  Then $p$ is a discrete fibration if and only if its opposite is.
+
+  There exists an example of a category $C$ and a discrete fibration $X \to C$
+  such that $X\op \to C\op$ is \emph{not} a discrete fibration.
+\end{eg}
+
+\section{Presheaf Categories closed under Slices - 
+  Bundles and Relativisation}
+
+\begin{prop}
+
+  Let $C$ be a (small) category.
+  Let $(p : S \to  C)$ in $\PSH C$.
+  By composition with $p$, 
+  we get a functor $\PSH S \to \PSH C / S$.
+  This yields an equivalence of categories
+  \[
+    \PSH S \simeq \PSH C / S  
+  \]
+\end{prop}
+\begin{proof}
+  By our definition of presheaves over $ C$,
+  this follows from the pasting lemma for pullback squares applied to
+  a diagram of the form : 
+  \begin{cd}
+    {C^{[1]}} & {S^{[1]}} & {X^{[1]}} \\
+    C & S & X \\
+    {}
+    \arrow[from=2-3, to=2-2]
+    \arrow[from=2-2, to=2-1]
+    \arrow[from=1-1, to=2-1]
+    \arrow[from=1-2, to=1-1]
+    \arrow[from=1-3, to=1-2]
+    \arrow[from=1-2, to=2-2]
+    \arrow[from=1-3, to=2-3]
+    \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=-90}, 
+      draw=none, from=1-2, to=2-1]
+  \end{cd}
+  This is one of the reasons for this choice of definition of $\PSH C$.
+\end{proof}
+
+\section{Yoneda's Lemma - 
+  Probeable objects are defined by how they can be probed}
+
+\begin{prop}[``Test Objects are Clearly Probeable by Test Objects'']
+
+  Let $ C$ be a (small) category.
+  Then 
+  \begin{enumerate}
+    \item taking over-categories defines a functor
+    $C \to \PSH C$.
+    \item (Yoneda's lemma) Let $X \in \PSH C$ and $c \in  C$.
+    Given a morphism $\al : C / c \to X$ of presheaves,
+    we have a naive-morphism of $c$ to $x$ by taking
+    the ``composition of $\al$ with $\id{c}$'',
+    that is to say, the image of $\id{c}$ under $\al$.
+    This defines the following bijection that is functorial in $c$ and $X$ : 
+    \[
+      \PSH C (C / c , X) \iso X (c)
+    \]
+    In other words, 
+    ``morphisms from $c$ to $X$ as $C$-probeable spaces
+    are the same as naive-morphisms from $c$ to $X$''.
+    In particular,
+    the functor $C \to \PSH C$ is fully faithful.
+    This is called the \emph{Yoneda embedding}.
+    Presheaves in its essential image are called \emph{representable}.
+
+    Since morphisms $x : C / c \to X$ correspond to objects 
+    in (the source category of) $X$,
+    we also call these \emph{points of $X$}.
+    For general morphisms $y : Y \to X$ from other presheaves,
+    we call them \emph{generalised points of $X$}.
+    \item (Density Theorem / "Functional Extensionality for Presheaves") 
+    Let $X$ in $\PSH C$.
+    Consider the slice category $(C / \_ ) / X$
+    consisting of Yoneda embeddings over $X$.
+    This has an obvious structure as a presheaf over $C$
+    and by the Yoneda lemma has a morphism $(C / \_)/ X \to X$ over $C$.
+    In this way, we can convert $X$ into a diagram of presheaves over $C$.
+    The result is that $X$ is the colimit of this diagram,
+    written suggestively as $X = \COLIM_{x \in X} x$.
+  \end{enumerate} 
+\end{prop}
+\begin{proof}
+  \textit{(1)} The functor $C \to \PSH C$ acts on morphisms
+  ``by composition''.
+
+  \textit{(2)} 
+  The hard part is realising that $C / c$ has $\id{c}$ as a final object.
+
+  \textit{(3)} The point is that
+  the data of a morphism out of $X \to Y$ is precisely 
+  ``how to map the points and the morphisms'',
+  and this is equivalent to a cocone structure of $Y$ over $(C / \_) / X$
+  by Yoneda's lemma.
+  
+\end{proof}
+
+\begin{eg}
+  
+  The density theorem applied to the case of $\SET = \PSH \bullet$
+  recovers functional extensionality.
+\end{eg}
+
+\section{Nerve and Realisation - Probing objects in other categories}
+
+\begin{prop}
+
+  Let $C$ be a (small) category and
+  $F :  C \to D$ a functor.
+  \begin{itemize}
+    \item (Nerve)
+    We can now probe objects in $D$ by objects in $C$ via $F$.
+    This is formalised by the \emph{nerve functor} (with respect to $F$),
+    which is defined as 
+    \begin{align*}
+      &N_F : D \to \PSH C \\
+      &( N_F \, d ) \, c := F / d
+    \end{align*}
+    This can equivalently be defined by the pullback diagram : 
+    \begin{cd}
+      {F/d} & {D/d} \\
+      C & D
+      \arrow[from=1-1, to=2-1]
+      \arrow[from=2-1, to=2-2]
+      \arrow[from=1-2, to=2-2]
+      \arrow[from=1-1, to=1-2]
+      \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \end{cd}
+    \item (Realisation and the Adjunction)
+    There is an adjunction
+    \[
+      D ( \abs{\_}_F , \star) \iso \PSH C ( \_ , N_F \star)
+    \]
+    if and only if for every presheaf $X$ over $C$,
+    the colimit \[
+      \COLIM_{x \in X} F c  
+    \]
+    exists in $D$, where we see each $x \in X$ as a morphism $x : C / c \to X$
+    as in the density theorem.
+
+    The functor $\abs{\_}_F$ is called \emph{realisation} along $F$.
+
+  \end{itemize}
+
+  % \item (Free-Cocompletion)
+  %   The category $\PSH C$ is cocomplete and 
+  %   colimits are computed ``fiberwise''.
+  %   Furthermore, we have an equivalence of categories 
+  %   \[
+  %     \mathrm{coComplete}(\PSH  C, -) \simeq \CAT( C, -)
+  %   \]
+  %   where the functor in the forwards direction is given by
+  %   pre-composition with the Yoneda-embedding and 
+  %   the functor in reverse is given by extending via colimits
+  %   as in the density theorem.
+  %   We say that $\PSH  C$ is the \emph{free cocompletion of $ C$}.
+ 
+    % By the previous point, we have an extension of this functor
+    % to a functor $\tilde{F} : \PSH C \to \DD$.
+    % For $d$ in $\DD$, define the \emph{nerve of $d$ via $F$}
+    % to be the object $N_F(d)$ in $\PSH C$ defined as the comma category $F / d$ 
+    % equipped with the forgetful functor to $C$.
+    % In other words, ``we probe $d$ by the test objects in $C$ using $F$''.
+    % Composition by morphisms upgrade this into a functor
+    % $N_F : \DD \to \PSH C$.
+    % Then we have an adjunction $\tilde{F} \dashv N_F$.
+\end{prop}
+\begin{proof}
+  
+  \textit{(Adjunction)($\limplies$)}
+  \begin{align*}
+    D(\abs{X}_F , d) \iso D(\COLIM_{x \in X} F c , d)
+    &\iso \LIM_{x \in X} D(F c , d) \\
+    &\iso \LIM_{x \in X} \PSH C ( C / c , N_F d)
+    \iso \PSH C (\COLIM_{x \in X} C / c , N_F d)
+    \iso \PSH C (X , N_F d)
+  \end{align*}
+
+  $(\implies)$ Assuming we have such an adjunction,
+  we have 
+  \begin{align*}
+    D(\abs{X}_F , d) \iso \PSH C (X , N_F d)
+    \iso \PSH C (\COLIM_{x \in X} C / c , N_F d)
+    \iso \LIM_{x \in X} \PSH C ( C / c , N_F d)
+    \iso \LIM_{x \in X} D(F c , d)
+  \end{align*}
+  which shows $\abs{X}_F$ has the structure of
+  a colimit desired.
+
+\end{proof}
+
+\section{Pullback , Shriek Pushforward, Pushforward - 
+  Reindexing, Dependent Sum, Dependent Products for Presheaves}
+
+\begin{prop}
+
+  For every functor $u : C \to D$,
+  we have an adjoint triple of functors
+  \begin{cd}
+    {\mathbf{PSh} C} && {\mathbf{PSh} D}
+    \arrow["{u^*}"{description}, from=1-3, to=1-1]
+    \arrow["{u_*}"{description}, shift right=10, from=1-1, to=1-3]
+    \arrow["{u_!}"{description}, shift left=10, from=1-1, to=1-3]
+    \arrow["\bot"{description}, shift left=5, draw=none, from=1-1, to=1-3]
+    \arrow["\bot"{description}, shift right=5, draw=none, from=1-1, to=1-3]
+  \end{cd}  
+  where the three functors are defined as follows : 
+  \begin{itemize}
+    \item (Shriek Pushforward / Dependent Sum)
+    $u_!$ is given by realisation along the composition
+    $C \to D \to \PSH D$.
+    Recalling the formula for realisation, we have explicitly
+    \[
+      u_! X := \COLIM_{x \in X} D / u c
+    \]
+    where we view $x \in X$ as $x : C / c \to X$ as in the density theorem.
+
+    We also write $\Sigma_u$ for $u_!$.
+
+    In the functor perspective of presheaves,
+    $u_! X$ is called the \emph{left Kan extension of $X$ along $u$}.
+
+    \item (Pullback / Reindexing)
+    $u^*$ is given by the nerve functor along
+    $C \to D \to \PSH D$.
+    Explicitly, this is given by the pullback of presheaves along $u$.
+
+    In the perspective of presheaves as functors into $\SET\op$,
+    $u^*$ corresponds to precomposition with $u$.
+    \item (Pushforward / Dependent Product)
+    $u_*$ is defined as the nerve functor along $u^* : D \to \PSH D \to \PSH C$.
+    Explicitly,
+    \[
+      u_* X := \PSH C ( F / \_ , X)
+    \]
+
+    We also write $\Pi_u$ for $u_*$.
+
+    In the functor perspective of presheaves,
+    $u^* X$ is called the \emph{right Kan extension of $X$ along $u$}.
+    
+  \end{itemize}
+
+  Hence, 
+  all presheaf categories have colimits and limits.
+  Furthermore, they are computed fiberwise in the sense that
+  for any diagram $X : I \to \PSH C$ and $c \in C$,
+  \begin{align*}
+    (\COLIM_{i \in I} X)_c \iso \COLIM_{i \in I} (X_i)_c \\
+    (\LIM_{i \in I} X)_c \iso \LIM_{i \in I} (X_i)_c
+  \end{align*}
+\end{prop}
+\begin{proof}
+  
+  % \textit{(Dependent Sum)}
+  % The goal is to show that for any $X \in \PSH C$
+  % the colimit $\COLIM_{x \in X} D / u c$ exists and 
+  % hence $u_!$ defines a functor.
+
+  % Let $X \in \PSH C$.
+  % We need to make a presheaf \emph{over $D$} from $X$.
+  % We proceed by inspecting the diagram in question 
+  % $\tilde{X} : (C/\_)/X \to \PSH D , x \mapsto D / u c$.
+  % Naively, the presheaf we seek would have 
+  % as fibers over each $d \in D$ in the image of $u$
+  % the fiber of $X \to C \to D$ over $d$.
+  % Though the fiber of $X \to C \to D$ over $d$
+  % does give rise to a sub-diagram $\tilde{X}_d$ of $\tilde{X}$, 
+  % this $\tilde{X}_d$ is hardly usually a discrete category,
+  % which it must be since we want a presheaf.
+
+  This proposition is equivalent to showing that
+  all presheaf categories are cocomplete : 
+  By the nerve and realisation adjunction,
+  to show this proposition it suffices to show that 
+  all presheaf categories are cocomplete.
+  Now assume all presheaf categories are cocomplete.
+  We can then construct colimits and limits in $\PSH C$
+  by noticing that given a category $I$,
+  a diagram $X : I \to \PSH C$ is the same as 
+  a functor $I \times C \to \SET\op$ by uncurrying,
+  and hence is the same as the data of a presheaf $X \in \PSH (I \times C)$.
+  It follows that colimits and limits of $I$-diagrams in $\PSH C$
+  are giving by the dependent sum and dependent product
+  along the projection functor $\si : I \times C \to C$ since
+  pulling back along $\si$ corresponds exactly to 
+  taking constant diagrams $\PSH C \to (\PSH C)^I$
+  and we have the bijections,
+  \begin{align*}
+    \PSH C (\si_! X , \_ ) \iso \PSH(I \times C) (X , \si^* \_) \\
+    \PSH (I \times C) (\si^* \_ , ) \iso \PSH C (\_ , \si_* X)
+  \end{align*}
+  
+  We can say more.
+  The proposition also tells us why colimits and limits can be computed
+  fiberwise.
+  The key observation is that for any object $c \in C$,
+  pulling back along the corresponding functor $c : \bullet \to C$
+  is the same as taking fiber over $c$.
+  But we know that $c^* : \PSH C \to \PSH \bullet = \SET$
+  has left and right adjoints $c_!$ and $c_*$,
+  so $c^*$ must preserve both limits and colimits.
+  This can be nicely phrased (though be it not very useful) as
+  some sort of base change result
+  \begin{align*}
+    c^* \si_! &\iso \tau_! \ga^* \\
+    c^* \si_* &\iso \tau_* \ga^*
+  \end{align*}
+  where
+  \begin{cd}
+    I & {I \times C} \\
+    \bullet & C
+    \arrow["\tau"', from=1-1, to=2-1]
+    \arrow["\gamma", from=1-1, to=1-2]
+    \arrow["c"', from=2-1, to=2-2]
+    \arrow["\sigma", from=1-2, to=2-2]
+    \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+  \end{cd}
+
+
+  We are ready to show that any presheaf category is cocomplete.
+  Given a diagram $X : I \to \PSH C$,
+  we compromise the total space perspective and
+  momentarily view presheaves as functors to define the presheaf
+  \[
+    \tilde{X}(c) := \COLIM_{i \in I} X_i(c)
+  \]
+  The action of morphisms is given by UPs of the colimits.
+  It is also easy to show that there is a cocone over $X$ with 
+  tip $\tilde{X}$ making $\tilde{X}$ the colimit of $X$.
+\end{proof}
+
+\begin{eg}
+  
+  Let $I$ be a discrete category, i.e. a set,
+  and $X \in \PSH I$, seen as a family of sets $(X_i)_{i \in I}$ over $I$.
+  Let $p : I \to \bullet$ be the canonical morphism of sets to the singleton.
+  Show that $\Sigma_p X$ is the disjoint union $\Sigma_{i \in I} X_i$
+  and $\Pi_p X$ is the set of sections of $X$,
+  i.e. $\Pi_{i \in I} X_i$.
+\end{eg}
+
+\section{Presheaf Category as the Free Cocompletion}
+
+\begin{prop}
+  
+  Let $\mathrm{CoComplete}$ denote the category of
+  cocomplete categories with cocontinuous functors as morphisms.
+  Let $C$ be a category.
+  Then we have an equivalence of categories : 
+  \[
+    \mathrm{CoComplete}(\PSH C , \_) \map{\sim}{}
+    \mathbf{Cat}(C , \_)
+  \]
+\end{prop}
+\begin{proof}
+  TODO 
+\end{proof}
+
+\section{Presheaf Categories are Cartesian Closed - 
+  Mapping Objects and Currying}
+
+\begin{prop}
+
+  Let $C$ be a (small) category.
+  Then $\PSH C$ is cartesian closed. 
+  This means given two presheaves $X, Y$ over $C$,
+  we have a presheaf $Y^X$ which ``internalises'' 
+  the morphisms from $X$ to $Y$ in the sense that we have
+  an adjunction reflecting \emph{currying} : 
+  \[
+    \PSH C (X \times (-) , Y) \iso \PSH C ( - , Y^X)  
+  \]
+\end{prop}
+\begin{proof}
+  Given a presheaf $X$ over $ C$,
+  apply the nerve-realisation adjunction to the functor
+  $X \times (-) : \PSH C \to \PSH C$.
+\end{proof}
+
+\section{Subobject Classifer - A universe of propositions}
+
+\begin{prop}
+
+  Let $C$ be a (small) category.
+  For $X$ in $\PSH C$,
+  define a \emph{subbundle of $p$} to be a full subcategory of $X$.
+  Subbundles of a presheaf have an obvious structure as a presheaf.
+  Define the category $\SUB$ over $\PSH C$ via the data :
+  \begin{itemize}
+    \item the source category has as objects 
+    subbundles of discrete bundles over $ C$.
+    For morphisms between two subbundles $P, Q$ of 
+    respectively $X, Y$,
+    they are morphisms $f \in \PSH C(X,Y)$ such that
+    we have an induced pullback square : 
+    \begin{cd}
+      P & Q \\
+      X & Y
+      \arrow[from=2-1, to=2-2, "f"{swap}]
+      \arrow[from=1-1, to=2-1]
+      \arrow[from=1-1, to=1-2]
+      \arrow[from=1-2, to=2-2]
+      \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \end{cd}
+    In other words, that $P$ is the ``preimage'' of $Q$.
+    \item there is a functor from the above source category to $\PSH C$
+    by taking the ambient bundle of a subbundle.
+  \end{itemize} 
+  Then $\SUB$ defines a presheaf over $\PSH C$ and is in fact
+  representable by its pullback to along $ C \to \PSH C$.
+  We call its pullback to $C$ the 
+  \emph{universe of propositions (of $\PSH C$)}
+  and denote it with $\mathrm{Prop}$.
+\end{prop}
+\begin{proof}
+  \textit{($\SUB \in \PSH C$)}
+  We need to give a unique solution $\tilde{f}$ to
+  the lifting problem 
+  \begin{cd}
+    {[0]} & {\mathbf{Sub}} \\
+    {[1]} & {\mathbf{PSh}\mathcal{C}}
+    \arrow["1"', from=1-1, to=2-1]
+    \arrow["f"', from=2-1, to=2-2]
+    \arrow["t", from=1-2, to=2-2]
+    \arrow[from=1-1, to=1-2]
+    \arrow["{\tilde{f}}"', dashed, from=2-1, to=1-2]
+  \end{cd}
+  What we have is two presheaves $X, Y$ over $ C$,
+  a morphism $f : X \to Y$ over $ C$ and 
+  a subbundle $S$ of $Y$.
+  A lift $\tilde{f}$ is exactly a functor $X \to Y$ that is equal to $f$
+  together with a subbundle of $X$ that is equal to 
+  the preimage of $S$ under $f$.
+  In other words, we have a lift and it is unique.
+
+  \textit{(Representability of $\SUB$ by $\mathrm{Prop}$)}
+  The goal is to give a bijection 
+  \[
+    \PSH C(X,\mathrm{Prop}) \iso \SUB(X)  
+  \]
+  that is functorial in $X$.
+  The idea is that $\mathrm{Prop}$ is the ``universe of propositions''
+  in $\PSH C$,
+  so a morphism $X \to \mathrm{Prop}$ the same as a ``predicate on $X$'',
+  which is exactly a ``subset'' of $X$, i.e. a subbundle.
+  Thus, the forward map is defined as follows : 
+  given a $P \in \PSH C(X,\mathrm{Prop})$,
+  give the subbundle $\set{X\st P}$ of 
+  ``points of $X$ where $P$ is true''.
+  In other words, $\set{X\st P}$ is defined by the pullback diagram : 
+  \begin{cd}
+    {\{X\vert P\}} & \top \\
+	  X & {\mathrm{Prop}}
+	  \arrow["P"', from=2-1, to=2-2]
+	  \arrow[from=1-1, to=2-1]
+	  \arrow[from=1-2, to=2-2]
+	  \arrow[from=1-1, to=1-2]
+	  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+  \end{cd}
+  The \emph{universal subbundle} $\top \to \mathrm{Prop}$
+  is defined by the full subcategory of $\mathrm{Prop}$
+  consisting of inclusions of representables into themselves by identity,
+  i.e. ``$\set{C / c \st \top}$'' across all $c$ in $ C$.
+  
+  We first show surjectivity.
+  Let $S \to X$ be a subbundle of a presheaf over $ C$.
+  We need to give a morphism $P \in \PSH C(X,\mathrm{Prop})$ such that
+  we have the pullback square : 
+  \begin{cd}
+    S & \top \\
+	  X & {\mathrm{Prop}}
+	  \arrow["P"', from=2-1, to=2-2]
+	  \arrow[from=1-1, to=2-1]
+	  \arrow[from=1-2, to=2-2]
+	  \arrow[from=1-1, to=1-2]
+	  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+  \end{cd}
+  Intuition : $P$ is the predicate $``\cdot \in S''$.
+  Since $X$ is the colimit of its elements,
+  to give a morphism $``\cdot \in S'' : X \to \mathrm{Prop}$
+  is the same as giving for each $x : C / c \to X$ 
+  a morphism $C / c \to \mathrm{Prop}$
+  that is functorial in the source $c$.
+  The rest of the argument is contained in the following diagram
+  together with the facts that limits are computed fiber-wise and that
+  the correspondence we seek is trivial for the case of representables : 
+  \begin{cd}
+    {x^{-1}S} & S \\
+    {\hat{c}} & X & \top \\
+    && {\mathrm{Prop}}
+    \arrow[from=1-1, to=2-1]
+    \arrow["x"', from=2-1, to=2-2]
+    \arrow[from=1-1, to=1-2]
+    \arrow["{\cdot \in S}"', dashed, from=2-2, to=3-3]
+    \arrow["{\cdot \in x^{-1}S}"{swap}, bend right = 30, from=2-1, to=3-3]
+    \arrow[from=1-2, to=2-2]
+    \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
+    \arrow[from=2-3, to=3-3]
+    \arrow[dashed, from=1-2, to=2-3]
+    \arrow[bend right = 30, from=1-1, to=2-3]
+  \end{cd}
+
+  Now to show injectivity, let $P, Q : X \to \mathrm{Prop}$
+  such that $\set{X \st P} = \set{X \st Q}$.
+  By ``functional extensionality for presheaves'',
+  it suffices to show that for all points $x$ of $X$ we have $P x = Q x$.
+  The rest again follows from the fact that
+  what we want to show is a tautology for the case of representables.
+
+\end{proof}
+
+\begin{eg}
+  
+  Already mentioned for motivation in the above proof, but
+  for the case of $\SET = \PSH \bullet$,
+  the set $\set{\nothing , \bullet}$ works as a subobject classifier.
+  This is the categorical formalisation of the fact that
+  in classical mathematics,
+  ``all propositions are either true or false''.
+\end{eg}
+
+\section{Presheaf toposes - A place to do mathematics with strict equality}
+
+TODO : write out how to interpret intuitionistic type theory
+in a presheaf topos.
+
+\begin{rmk}[Presheaf Categories as a ``Place to Do Maths'']
+  
+  What the properties in the previous sections show is that
+  presheaf categories have the categorical properties
+  needed to interpret all we need to do ``maths'', 
+  namely : 
+  \begin{itemize}
+    \item finite products to talk about contexts with multiple variables
+    \item finite equalizers to talk about when ``elements'' are equal
+    \item exponential objects to talk about morphisms
+    \item a universe of propositions, to talk about ``predicates''
+  \end{itemize}
+  Abstracting these properties
+  give the definition of an \emph{elementary topos}.
+  The canonical example is of course $\SET = \PSH\bullet$
+  the category of presheaves over ``the abstract point''.
+  
+  % But this is not what we want,
+  % since it is precisely strict equality of objects and morphisms
+  % that we are struggling with!
+  % The great idea that people had (quite recently!) is to
+  % represent the ``data'' of an equality between two elements $s, t$
+  % as a \emph{path} from $s$ to $t$.
+  % And thus we enter the world of \emph{homotopy}.
+\end{rmk}
+
+% \begin{ex}
+
+%   Define $\MOD \to \CRING$ where
+%   \begin{itemize}
+%     \item the category $\MOD$ has as objects $(A,M)$ where 
+%     $A$ is in $\CRING$ and $M$ is in $A\MOD$,
+%     and as morphisms between $(A,M) \to (B,N)$
+%     pairs $(f,\phi)$ where
+%     $f \in \CRING(A,B)$ and $\phi \in A\MOD(M,N)$
+%     where $N$ is endowed with an $A$-module structure by
+%     viewing $B$ as an $A$-algebra via $f$.
+%     \item the functor $\MOD \to \CRING$ is takes $(A,M)$ to $A$.
+%   \end{itemize}
+%   Define \emph{the category of affine schemes} to be 
+%   $\AFF := \CRING\op$ and 
+%   $\QCOH := \MOD\op$ so that
+%   $\QCOH \to \AFF$ is the opposite of the above functor.
+%   For $A$ in $\CRING\op$, write $\SPEC A$ for the opposite of $A$.
+
+%   Show that for any $A$ in $\CRING$, 
+%   the fiber of $\MOD \to \CRING$ over $A$ is
+%   equivalent to the category $A\MOD$,
+%   and hence deduce that $\QCOH \to \AFF$ is \emph{not} a discrete fibration.
+  
+%   Show that for each $f \in \CRING(A,B)$ and $(A,M)$ in $\MOD$,
+%   we have a lift $(A,M) \to (B, M \otimes_A B)$ of $f$.
+%   Try to apply the (dual of the) fiber functor construction to
+%   $\MOD \to \CRING$ to get a functor $\CRING \to \CAT$ to the category of 
+%   (small) categories and realise that
+%   functoriality is only true \emph{up to isomorphism} since
+%   $(- \otimes_A B) \otimes_B C \neq (-) \otimes_A C$
+
+%   This is an example of a ``bundle of categories''.
+%   For (1-)categories, they go by the name of \emph{Grothendieck fibrations},
+%   or \emph{fibered categories}.
+%   A systematic way of dealing with
+%   ``commuting up to isomorphisms''
+%   is a way of motivating infinity-category theory.
+
+% \end{ex}
+
+\end{document}
