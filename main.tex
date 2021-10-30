@@ -303,7 +303,7 @@
     obvious : 
     right fibrations are exactly discrete fibrations
     where sets are replaced with ``sets with equality as data''.
-    Specifically, we will much later see that
+    Specifically,
     right fibrations over an infinity category $X$
     correspond to functors $X \to \infty\mathbf{Grpd}\op$
     to the infinity category of infinity groupoids.
@@ -460,6 +460,9 @@
     \]
     exists in $D$, where we see each $x \in X$ as a morphism $x : C / c \to X$
     as in the density theorem.
+    In this case,
+    $\abs{\_}_F$ is in fact the left Kan extension of $F$
+    along the Yoneda embedding $C \to \PSH C$.
 
     The functor $\abs{\_}_F$ is called \emph{realisation} along $F$.
 
@@ -509,6 +512,10 @@
   \end{align*}
   which shows $\abs{X}_F$ has the structure of
   a colimit desired.
+
+  \textit{($\abs{\_}_F$ is the left Kan extension)}
+  This comes down to the fact that
+  the formula for the realisation is by colimits.
 
 \end{proof}
 
@@ -592,13 +599,28 @@
   % this $\tilde{X}_d$ is hardly usually a discrete category,
   % which it must be since we want a presheaf.
 
-  This proposition is equivalent to showing that
-  all presheaf categories are cocomplete : 
-  By the nerve and realisation adjunction,
-  to show this proposition it suffices to show that 
-  all presheaf categories are cocomplete.
-  Now assume all presheaf categories are cocomplete.
-  We can then construct colimits and limits in $\PSH C$
+  Let us first remark that the fact that limits of presheaves 
+  is computed fiberwise is an easy consequence of Yoneda's lemma : 
+  \[
+    (\LIM_{i \in I} X_i)_c \iso 
+    \PSH C (C / c , \LIM_{i \in I} X_i)
+    \iso \LIM_{i \in I} \PSH C (C / c , X_i)
+    \iso \LIM_{i \in I} (X_i)_c
+  \]
+  On the other hand,
+  the fact that colimits of presheaves can be computed fiberwise
+  is saying that representables are \emph{tiny}.
+
+  A surprising fact I noticed is that
+  the existence of the adjoint triple
+  for all $u : C \to D$ where $C, D$ are (small) categories
+  is actually equivalent to
+  the cocompleteness of presheaf categories together with
+  tininess of representables.
+
+  First, let us assume we have the adjoint triple for all $u : C \to D$.
+  Let $C$ be a (small) category.
+  Then we can construct colimits and limits in $\PSH C$
   by noticing that given a category $I$,
   a diagram $X : I \to \PSH C$ is the same as 
   a functor $I \times C \to \SET\op$ by uncurrying,
@@ -611,19 +633,17 @@
   and we have the bijections,
   \begin{align*}
     \PSH C (\si_! X , \_ ) \iso \PSH(I \times C) (X , \si^* \_) \\
-    \PSH (I \times C) (\si^* \_ , ) \iso \PSH C (\_ , \si_* X)
+    \PSH (I \times C) (\si^* \_ , X) \iso \PSH C (\_ , \si_* X)
   \end{align*}
-  
-  We can say more.
-  The proposition also tells us why colimits and limits can be computed
-  fiberwise.
-  The key observation is that for any object $c \in C$,
+  Now for tininess of representables,
+  the key observation is that for any object $c \in C$,
   pulling back along the corresponding functor $c : \bullet \to C$
   is the same as taking fiber over $c$.
   But we know that $c^* : \PSH C \to \PSH \bullet = \SET$
-  has left and right adjoints $c_!$ and $c_*$,
-  so $c^*$ must preserve both limits and colimits.
-  This can be nicely phrased (though be it not very useful) as
+  has a right adjoint $c_*$,
+  so $c^*$ must preserve both colimits.
+  The fact that colimits and limits are computed fiberwise
+  can be nicely phrased (though be it not very useful) as
   some sort of base change result
   \begin{align*}
     c^* \si_! &\iso \tau_! \ga^* \\
@@ -640,17 +660,42 @@
     \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
   \end{cd}
 
+  Now let's assume that $\PSH C$ is cocomplete
+  and representables are tiny for all (small) $C$.
+  Then by the nerve and realisation adjunction,
+  we obtain the adjunction $u_! \dashv u^*$.
+  We can also obtain the adjunction $u^* \dashv u_*$ by
+  another application of the nerve-realisation adjunction
+  provided we show that $u^*$ satisfies the formula : 
+  \[
+    u^* X \iso \COLIM_{x \in X} u^* D / d
+  \]
+  By tininess of representables in $\PSH C$,
+  it suffices to check the fibers of $u^* X$ and 
+  $\COLIM_{x \in X} u^* D / d$ match.
+  But tininess of representables in $\PSH D$ give this : 
+  \[
+    (u^* X)_c = X_{u c}
+    \iso \COLIM_{x \in X} (D / d)_{u c}
+    = \COLIM_{x \in X} (u^* D / d)_c
+    \iso (\COLIM_{x \in X} u^* D / d)_c
+  \]
 
-  We are ready to show that any presheaf category is cocomplete.
-  Given a diagram $X : I \to \PSH C$,
+  Back to the proposition,
+  by the above discussion 
+  it suffices to show cocompleteness of presheaf categories and 
+  tininess of representables.
+  Well, given a diagram $X : I \to \PSH C$,
   we compromise the total space perspective and
   momentarily view presheaves as functors to define the presheaf
   \[
     \tilde{X}(c) := \COLIM_{i \in I} X_i(c)
   \]
+  following the expected formula.
   The action of morphisms is given by UPs of the colimits.
   It is also easy to show that there is a cocone over $X$ with 
   tip $\tilde{X}$ making $\tilde{X}$ the colimit of $X$.
+  By construction, this makes all representables tiny.
 \end{proof}
 
 \begin{eg}
@@ -677,7 +722,16 @@
   \]
 \end{prop}
 \begin{proof}
-  TODO 
+  We've seen that $\PSH C$ is cocomplete.
+  Now let $i : \mathrm{CoComplete}(\PSH C , \_) \to \mathbf{Cat}(C , \_)$
+  be obtained by precomposition with the Yoneda embedding $C \to \PSH C$.
+  Full and faithfulness of $i$ follows from the density theorem.
+  For essential surjectivity, 
+  we know that any functor $F : C \to D$ where $D$ is cocomplete
+  extends along the Yoneda embedding to $\abs{ \_ }_F : \PSH C \to D$ via
+  the nerve-realisation adjunction.
+  Since realisation is left adjoint to the nerve functor,
+  it is cocontinuous.
 \end{proof}
 
 \section{Presheaf Categories are Cartesian Closed - 
