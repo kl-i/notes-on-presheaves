@@ -392,7 +392,7 @@
     we also call these \emph{points of $X$}.
     For general morphisms $y : Y \to X$ from other presheaves,
     we call them \emph{generalised points of $X$}.
-    \item (Density Theorem / "Functional Extensionality for Presheaves") 
+    \item (Density Theorem / "Function Extensionality for Presheaves") 
     Let $X$ in $\PSH C$.
     Consider the slice category $(C / \_ ) / X$
     consisting of Yoneda embeddings over $X$.
@@ -421,7 +421,7 @@
 \begin{eg}
   
   The density theorem applied to the case of $\SET = \PSH \bullet$
-  recovers functional extensionality.
+  recovers function extensionality.
 \end{eg}
 
 \section{Nerve and Realisation - Probing objects in other categories}
@@ -437,9 +437,9 @@
     which is defined as 
     \begin{align*}
       &N_F : D \to \PSH C \\
-      &( N_F \, d ) \, c := F / d
+      & N_F \, d := F / d
     \end{align*}
-    This can equivalently be defined by the pullback diagram : 
+    which can be defined by the pullback diagram : 
     \begin{cd}
       {F/d} & {D/d} \\
       C & D
@@ -761,8 +761,9 @@
 
   Let $C$ be a (small) category.
   For $X$ in $\PSH C$,
-  define a \emph{subbundle of $p$} to be a full subcategory of $X$.
-  Subbundles of a presheaf have an obvious structure as a presheaf.
+  define a \emph{subbundle of $p$} to be a subcategory of $X$
+  which is also a presheaf over $C$.
+  (Note that this implies subbundles are full subcategories.)
   Define the category $\SUB$ over $\PSH C$ via the data :
   \begin{itemize}
     \item the source category has as objects 
@@ -806,10 +807,11 @@
   What we have is two presheaves $X, Y$ over $ C$,
   a morphism $f : X \to Y$ over $ C$ and 
   a subbundle $S$ of $Y$.
-  A lift $\tilde{f}$ is exactly a functor $X \to Y$ that is equal to $f$
+  A lift $\tilde{f}$ is exactly a functor $X \to Y$ over $C$ 
+  that is equal to $f$
   together with a subbundle of $X$ that is equal to 
   the preimage of $S$ under $f$.
-  In other words, we have a lift and it is unique.
+  This tells us that the lift exists and is unique.
 
   \textit{(Representability of $\SUB$ by $\mathrm{Prop}$)}
   The goal is to give a bijection 
@@ -853,9 +855,9 @@
 	  \arrow[from=1-1, to=1-2]
 	  \arrow["\lrcorner"{anchor=center, pos=0.125}, draw=none, from=1-1, to=2-2]
   \end{cd}
-  Intuition : $P$ is the predicate $``\cdot \in S''$.
+  Intuition : $P$ is the predicate ``$\cdot \in S$''.
   Since $X$ is the colimit of its elements,
-  to give a morphism $``\cdot \in S'' : X \to \mathrm{Prop}$
+  to give a morphism $\text{``}\cdot \in S\text{''} : X \to \mathrm{Prop}$
   is the same as giving for each $x : C / c \to X$ 
   a morphism $C / c \to \mathrm{Prop}$
   that is functorial in the source $c$.
@@ -864,7 +866,7 @@
   the correspondence we seek is trivial for the case of representables : 
   \begin{cd}
     {x^{-1}S} & S \\
-    {\hat{c}} & X & \top \\
+    {C / c} & X & \top \\
     && {\mathrm{Prop}}
     \arrow[from=1-1, to=2-1]
     \arrow["x"', from=2-1, to=2-2]
@@ -880,7 +882,7 @@
 
   Now to show injectivity, let $P, Q : X \to \mathrm{Prop}$
   such that $\set{X \st P} = \set{X \st Q}$.
-  By ``functional extensionality for presheaves'',
+  By ``function extensionality for presheaves'',
   it suffices to show that for all points $x$ of $X$ we have $P x = Q x$.
   The rest again follows from the fact that
   what we want to show is a tautology for the case of representables.
@@ -899,9 +901,6 @@
 
 \section{Presheaf toposes - A place to do mathematics with strict equality}
 
-TODO : write out how to interpret intuitionistic type theory
-in a presheaf topos.
-
 \begin{rmk}[Presheaf Categories as a ``Place to Do Maths'']
   
   What the properties in the previous sections show is that
@@ -915,7 +914,7 @@ in a presheaf topos.
     \item a universe of propositions, to talk about ``predicates''
   \end{itemize}
   Abstracting these properties
-  give the definition of an \emph{elementary topos}.
+  gives the definition of an \emph{elementary topos}.
   The canonical example is of course $\SET = \PSH\bullet$
   the category of presheaves over ``the abstract point''.
   
