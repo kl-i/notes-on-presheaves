@@ -14,6 +14,21 @@
 % - infinity groupoid of a topological space
 % - simplicial categories : stack of modules
 
+Conventions : 
+\begin{itemize}
+  \item $\SET, \CAT$ denotes respectively the category of (small)
+  sets and categories.
+  \item Given a category $C$ and an object $c$ in $C$,
+  we use $C / c$ to denote the slice category of $C$ over $c$.
+  Similarly, $c / C$ denotes the slice category of $C$ under $c$.
+  \item $\id{c}$ denotes the identity morphism whenever $c$ is an object in
+  a category $C$.
+  \item Given a category $C$ and objects $c, d$ in it,
+  we use $C(c,d)$ to denote the set of morphisms in $C$ from $c$ to $d$.
+  \item Given two categories $C, D$, we use $D^C$ to denote
+  the category of functors from $C$ to $D$.
+\end{itemize}
+
 \section{Presheaves - Objects probeable by a category of test objects}
 
 \begin{rmk}[Presheaves as Probeable Objects]
@@ -77,7 +92,7 @@
   Indeed, the classical theory of covering spaces
   can be seen as establishing conditions on the base topological space
   for which discrete fibrations over the (dual of the) fundamental groupoid
-  correspond to actual topological spaces over the base space.
+  correspond to topological covering spaces over the base space.
 \end{rmk}
 
 \begin{prop}[``A bundle of sets is a bundle of sets'']
@@ -287,6 +302,7 @@
   and call its objects \emph{presheaves (over $ C$)}.
   For $c$ in $C$ and $X$ in $\PSH C$,
   we will also write $X(c)$ for the fiber of $X$ over $c$.
+  Sometimes, we also write $X_c$.
 \end{dfn}
 
 \begin{rmk}
@@ -297,11 +313,12 @@
   \begin{itemize}
     \item the proofs of all nice properties of $\PSH C$,
     i.e. topos-theoretic properties, are arguably more intuitive
-    when phrased in terms of discrete fibrations.
+    when phrased in terms of the total spaces of discrete fibrations,
+    since we can use the intuition of ``points'' from $\SET$.
     \item building intuition of presheaves as discrete fibrations
     makes the later generalisation to right fibrations of infinity categories
     obvious : 
-    right fibrations are exactly discrete fibrations
+    morally right fibrations are discrete fibrations
     where sets are replaced with ``sets with equality as data''.
     Specifically,
     right fibrations over an infinity category $X$
@@ -357,7 +374,8 @@
     \arrow["\lrcorner"{anchor=center, pos=0.125, rotate=-90}, 
       draw=none, from=1-2, to=2-1]
   \end{cd}
-  This is one of the reasons for this choice of definition of $\PSH C$.
+  The neatness of this proof is
+  one of the reasons for this choice of definition of $\PSH C$.
 \end{proof}
 
 \section{Yoneda's Lemma - 
